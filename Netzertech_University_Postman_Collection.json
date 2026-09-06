@@ -1,0 +1,379 @@
+{
+  "info": {
+    "name": "Netzertech University Portal - Week 1 API",
+    "description": "Postman Collection covering Authentication, User Profiles, and Complete Admissions Flow.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01. Authentication",
+      "item": [
+        {
+          "name": "Login as Student (Email)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"chidi@novicauniversity.edu.ng\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Student (Matric Number)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"NVU/2021/CSC/001\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Staff (Dean)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"chioma.eze@novicauniversity.edu.ng\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Authenticated User Profile (/me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"password123\",\n  \"new_password\": \"newpassword123\",\n  \"new_password_confirmation\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Admissions Lifecycle",
+      "item": [
+        {
+          "name": "1. Get Academic Catalog (Programmes)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admissions/programmes",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "programmes"]
+            }
+          }
+        },
+        {
+          "name": "2. Register New Applicant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"David Adeleke\",\n  \"email\": \"david.adeleke@example.com\",\n  \"phone\": \"08011223344\",\n  \"password\": \"applicant123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admissions/register",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "register"]
+            }
+          }
+        },
+        {
+          "name": "3. Step Form: Save Personal Info",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dob\": \"2005-08-20\",\n  \"gender\": \"male\",\n  \"state_of_origin\": \"Osun\",\n  \"lga\": \"Ede North\",\n  \"nationality\": \"Nigerian\",\n  \"address\": \"Plot 12 University View, Osun State\",\n  \"city\": \"Osogbo\",\n  \"state\": \"Osun\",\n  \"father_name\": \"Mr. Adewale Adeleke\",\n  \"father_phone\": \"08033001122\",\n  \"father_occupation\": \"Architect\",\n  \"religion\": \"Christianity\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admissions/steps/personal",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "steps", "personal"]
+            }
+          }
+        },
+        {
+          "name": "4. Step Form: Save JAMB Record",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reg_number\": \"2026998811CD\",\n  \"score\": 295,\n  \"year\": 2026,\n  \"institution_chosen\": \"Netzertech University\",\n  \"course_chosen\": \"Computer Science\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admissions/steps/jamb",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "steps", "jamb"]
+            }
+          }
+        },
+        {
+          "name": "5. Step Form: Save O'Level Results",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sittings\": [\n    {\n      \"sitting_number\": 1,\n      \"exam_type\": \"WAEC\",\n      \"year\": 2025,\n      \"exam_number\": \"4201998811\",\n      \"centre_number\": \"420199\",\n      \"subjects\": [\n        { \"subject\": \"English Language\", \"grade\": \"A1\" },\n        { \"subject\": \"Mathematics\", \"grade\": \"B2\" },\n        { \"subject\": \"Physics\", \"grade\": \"A1\" },\n        { \"subject\": \"Chemistry\", \"grade\": \"B3\" },\n        { \"subject\": \"Biology\", \"grade\": \"B2\" }\n      ]\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admissions/steps/olevel",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "steps", "olevel"]
+            }
+          }
+        },
+        {
+          "name": "6. Step Form: Save Programme Choices",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_choice_programme_id\": 1,\n  \"second_choice_programme_id\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admissions/steps/programme",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "steps", "programme"]
+            }
+          }
+        },
+        {
+          "name": "7. Step Form: Save Uploaded Documents",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documents\": [\n    { \"name\": \"Passport Photograph\", \"fileName\": \"passport.jpg\", \"uploaded\": true },\n    { \"name\": \"Birth Certificate\", \"fileName\": \"birth_cert.pdf\", \"uploaded\": true },\n    { \"name\": \"JAMB Result Slip\", \"fileName\": \"jamb_result.pdf\", \"uploaded\": true },\n    { \"name\": \"O Level Result\", \"fileName\": \"olevel_slip.pdf\", \"uploaded\": true }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admissions/steps/documents",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "steps", "documents"]
+            }
+          }
+        },
+        {
+          "name": "8. Submit Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admissions/submit",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "submit"]
+            }
+          }
+        },
+        {
+          "name": "9. Check Admission & Screening Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admissions/status",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "status"]
+            }
+          }
+        },
+        {
+          "name": "10. Book Post-UTME Screening Slot",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-09-15\",\n  \"time\": \"09:00 AM\",\n  \"venue\": \"ICT Center Hall 1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admissions/post-utme/book",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "post-utme", "book"]
+            }
+          }
+        },
+        {
+          "name": "11. Accept Admission Offer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admissions/offer/accept",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "offer", "accept"]
+            }
+          }
+        },
+        {
+          "name": "12. Matriculate (Generate Matric No & Convert to Student)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admissions/matriculate",
+              "host": ["{{base_url}}"],
+              "path": ["admissions", "matriculate"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
