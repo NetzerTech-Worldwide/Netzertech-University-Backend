@@ -60,4 +60,35 @@ class Student extends Model
     {
         return $this->hasOne(StudentProfile::class);
     }
+
+    public function hostelAllocations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(HostelAllocation::class);
+    }
+
+    public function clinicRegistration(): HasOne
+    {
+        return $this->hasOne(ClinicRegistration::class);
+    }
+
+    public function clinicAppointments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ClinicAppointment::class);
+    }
+
+    public function digitalIdCard(): HasOne
+    {
+        return $this->hasOne(DigitalIdCard::class);
+    }
+
+    public function approvalRequests(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ApprovalRequest::class);
+    }
+
+    public function libraryBorrowRecords(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LibraryBorrowRecord::class);
+    }
 }
+
