@@ -90,5 +90,41 @@ class Student extends Model
     {
         return $this->hasMany(LibraryBorrowRecord::class);
     }
+
+    public function pgProfile(): HasOne
+    {
+        return $this->hasOne(PgStudentProfile::class);
+    }
+
+    public function pgProposals(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PgProposal::class);
+    }
+
+    public function pgMilestones(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PgThesisMilestone::class)->orderBy('chapter_number');
+    }
+
+    public function pgSupervisionLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PgSupervisionLog::class)->latest('meeting_date');
+    }
+
+    public function skills(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(StudentSkill::class);
+    }
+
+    public function projects(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(StudentProject::class);
+    }
+
+    public function certifications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(StudentCertification::class);
+    }
 }
+
 

@@ -1,307 +1,1813 @@
 {
-  "clientName": "Thunder Client",
-  "collectionName": "Netzertech University Multi-Tenant API (Weeks 1 & 2)",
-  "collectionId": "netzertech-multi-tenant-api",
-  "dateExported": "2026-09-05",
-  "version": "2.0",
-  "folders": [
-    {
-      "_id": "folder_auth",
-      "name": "01. Authentication & Multi-Tenancy",
-      "containerId": ""
-    },
-    {
-      "_id": "folder_admissions",
-      "name": "02. Admissions Lifecycle",
-      "containerId": ""
-    },
-    {
-      "_id": "folder_courses",
-      "name": "03. Academic SIS & Course Registration",
-      "containerId": ""
-    },
-    {
-      "_id": "folder_lms",
-      "name": "04. Learning Management System (LMS)",
-      "containerId": ""
-    },
-    {
-      "_id": "folder_cbt",
-      "name": "05. Online CBT Examination Engine",
-      "containerId": ""
-    },
-    {
-      "_id": "folder_results",
-      "name": "06. Results, NUC 5.0 CGPA & Transcripts",
-      "containerId": ""
-    }
-  ],
-  "requests": [
-    {
-      "_id": "req_1",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_auth",
-      "name": "Login - Novica Student (Email)",
-      "url": "http://127.0.0.1:8000/api/v1/auth/login",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "X-University-Code", "value": "NVU" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"identifier\": \"chidi@novicauniversity.edu.ng\",\n  \"password\": \"password123\"\n}"
-      }
-    },
-    {
-      "_id": "req_2",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_auth",
-      "name": "Login - Staff / HOD (Prof. Adebayo Olatunji)",
-      "url": "http://127.0.0.1:8000/api/v1/auth/login",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "X-University-Code", "value": "NVU" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"identifier\": \"adebayo.olatunji@novicauniversity.edu.ng\",\n  \"password\": \"password123\"\n}"
-      }
-    },
-    {
-      "_id": "req_3",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_courses",
-      "name": "1. Get Course Catalog (Filtered by Level & Semester)",
-      "url": "http://127.0.0.1:8000/api/v1/courses?level=300L&semester=first",
-      "method": "GET",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "X-University-Code", "value": "NVU" }
-      ]
-    },
-    {
-      "_id": "req_4",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_courses",
-      "name": "2. Register Semester Courses (Student)",
-      "url": "http://127.0.0.1:8000/api/v1/courses/register",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" },
-        { "name": "X-University-Code", "value": "NVU" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"course_ids\": [1, 2, 3, 4, 5, 6],\n  \"academic_session\": \"2025/2026\",\n  \"semester\": \"first\"\n}"
-      }
-    },
-    {
-      "_id": "req_5",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_courses",
-      "name": "3. View My Course Registration (Student)",
-      "url": "http://127.0.0.1:8000/api/v1/courses/my-registration",
-      "method": "GET",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ]
-    },
-    {
-      "_id": "req_6",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_courses",
-      "name": "4. Approve Course Registration (HOD)",
-      "url": "http://127.0.0.1:8000/api/v1/courses/registrations/1/approve",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_HOD_TOKEN" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"status\": \"approved\"\n}"
-      }
-    },
-    {
-      "_id": "req_7",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_lms",
-      "name": "1. Get Course Lecture Materials (CSC 301)",
-      "url": "http://127.0.0.1:8000/api/v1/courses/1/materials",
-      "method": "GET",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ]
-    },
-    {
-      "_id": "req_8",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_lms",
-      "name": "2. Upload Course Material (Lecturer)",
-      "url": "http://127.0.0.1:8000/api/v1/courses/1/materials",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_HOD_TOKEN" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"title\": \"Week 2: Graph Theory & Shortest Path Algorithms\",\n  \"description\": \"Dijkstra and Bellman-Ford implementations in Python.\",\n  \"file_url\": \"https://novica.edu.ng/materials/csc301_week2.pdf\",\n  \"file_type\": \"pdf\",\n  \"week_number\": 2\n}"
-      }
-    },
-    {
-      "_id": "req_9",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_lms",
-      "name": "3. Get Course Assignments",
-      "url": "http://127.0.0.1:8000/api/v1/courses/1/assignments",
-      "method": "GET",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ]
-    },
-    {
-      "_id": "req_10",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_lms",
-      "name": "4. Submit Assignment (Student)",
-      "url": "http://127.0.0.1:8000/api/v1/assignments/1/submit",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"submission_url\": \"https://github.com/chidi/csc301-graph-algorithms\",\n  \"student_comment\": \"Implemented Dijkstra with Min-Heap priority queue.\"\n}"
-      }
-    },
-    {
-      "_id": "req_11",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_lms",
-      "name": "5. Grade Assignment Submission (Lecturer)",
-      "url": "http://127.0.0.1:8000/api/v1/assignments/submissions/1/grade",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_HOD_TOKEN" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"score\": 29.00,\n  \"feedback\": \"Outstanding implementation and documentation.\"\n}"
-      }
-    },
-    {
-      "_id": "req_12",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_cbt",
-      "name": "1. List Available CBT Exams",
-      "url": "http://127.0.0.1:8000/api/v1/cbt/exams",
-      "method": "GET",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ]
-    },
-    {
-      "_id": "req_13",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_cbt",
-      "name": "2. Start CBT Exam Session (Student)",
-      "url": "http://127.0.0.1:8000/api/v1/cbt/exams/1/start",
-      "method": "POST",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ]
-    },
-    {
-      "_id": "req_14",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_cbt",
-      "name": "3. CBT Autosave Heartbeat",
-      "url": "http://127.0.0.1:8000/api/v1/cbt/sessions/1/heartbeat",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"answers\": {\n    \"1\": \"C\",\n    \"2\": \"B\"\n  }\n}"
-      }
-    },
-    {
-      "_id": "req_15",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_cbt",
-      "name": "4. Submit CBT Exam & Instant Auto-Grade",
-      "url": "http://127.0.0.1:8000/api/v1/cbt/sessions/1/submit",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"answers\": {\n    \"1\": \"C\",\n    \"2\": \"B\",\n    \"3\": \"A\"\n  }\n}"
-      }
-    },
-    {
-      "_id": "req_16",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_results",
-      "name": "1. Upload Student Score (CA + Exam) -> Computes GPA",
-      "url": "http://127.0.0.1:8000/api/v1/results/upload",
-      "method": "POST",
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_HOD_TOKEN" }
-      ],
-      "body": {
-        "type": "json",
-        "raw": "{\n  \"student_id\": 1,\n  \"course_id\": 1,\n  \"academic_session\": \"2025/2026\",\n  \"semester\": \"first\",\n  \"ca_score\": 29.00,\n  \"exam_score\": 56.00\n}"
-      }
-    },
-    {
-      "_id": "req_17",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_results",
-      "name": "2. Get Semester Result Slip (Student)",
-      "url": "http://127.0.0.1:8000/api/v1/results/semester?session=2025/2026&semester=first",
-      "method": "GET",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ]
-    },
-    {
-      "_id": "req_18",
-      "colId": "netzertech-multi-tenant-api",
-      "containerId": "folder_results",
-      "name": "3. Download Official Transcript PDF",
-      "url": "http://127.0.0.1:8000/api/v1/results/transcript",
-      "method": "GET",
-      "headers": [
-        { "name": "Authorization", "value": "Bearer YOUR_STUDENT_TOKEN" }
-      ]
-    }
-  ]
+    "clientName": "Thunder Client",
+    "collectionName": "Netzertech University Multi-Tenant Platform (Complete 4-Week API Suite)",
+    "collectionId": "netzertech-complete-suite-api",
+    "dateExported": "2026-09-08",
+    "version": "2.0",
+    "folders": [
+        {
+            "_id": "folder_auth",
+            "name": "01. Authentication & Multi-Tenancy",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_admissions",
+            "name": "02. Admissions Lifecycle",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_courses",
+            "name": "03. Academic SIS & Course Registration",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_lms",
+            "name": "04. Learning Management System (LMS)",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_cbt",
+            "name": "05. Online CBT Examination Engine",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_results",
+            "name": "06. Results, NUC 5.0 CGPA & Transcripts",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_finance",
+            "name": "07. Finance, Invoicing & Gateway Split Payments",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_hostels",
+            "name": "08. Facilities & Hostel Bed Allocations",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_clinic",
+            "name": "09. Campus Health Clinic",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_library",
+            "name": "10. Central Library & Digital Repositories",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_approvals",
+            "name": "11. Multi-Level Approvals Engine",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_identity",
+            "name": "12. Tamper-Proof Digital ID Cards",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_postgraduate",
+            "name": "13. Postgraduate School (SPS) Engine",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_ai_advisor",
+            "name": "14. Context-Aware AI Academic Advisor",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_career",
+            "name": "15. Career Success Portal & CV Generator",
+            "containerId": ""
+        },
+        {
+            "_id": "folder_collaboration",
+            "name": "16. Peer Collaboration & Study Groups",
+            "containerId": ""
+        }
+    ],
+    "requests": [
+        {
+            "_id": "req_1",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_auth",
+            "name": "1. Login - Novica Student",
+            "url": "http://127.0.0.1:8000/api/v1/auth/login",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "X-University-Code",
+                    "value": "NVU"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"identifier\": \"chidi@novicauniversity.edu.ng\",\n    \"password\": \"password123\"\n}"
+            }
+        },
+        {
+            "_id": "req_2",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_auth",
+            "name": "2. Login - Apex Student",
+            "url": "http://127.0.0.1:8000/api/v1/auth/login",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "X-University-Code",
+                    "value": "APEX"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"identifier\": \"tunde.bakare@apex.edu.ng\",\n    \"password\": \"password123\"\n}"
+            }
+        },
+        {
+            "_id": "req_3",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_auth",
+            "name": "3. Login - HOD Computer Science",
+            "url": "http://127.0.0.1:8000/api/v1/auth/login",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "X-University-Code",
+                    "value": "NVU"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"identifier\": \"adebayo.olatunji@novicauniversity.edu.ng\",\n    \"password\": \"password123\"\n}"
+            }
+        },
+        {
+            "_id": "req_4",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_auth",
+            "name": "4. Login - Dean CIT",
+            "url": "http://127.0.0.1:8000/api/v1/auth/login",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "X-University-Code",
+                    "value": "NVU"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"identifier\": \"chioma.eze@novicauniversity.edu.ng\",\n    \"password\": \"password123\"\n}"
+            }
+        },
+        {
+            "_id": "req_5",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_auth",
+            "name": "5. Login - Postgraduate Candidate",
+            "url": "http://127.0.0.1:8000/api/v1/auth/login",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "X-University-Code",
+                    "value": "NVU"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"identifier\": \"fatima.pg@novicauniversity.edu.ng\",\n    \"password\": \"password123\"\n}"
+            }
+        },
+        {
+            "_id": "req_6",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_auth",
+            "name": "6. Current User Profile (Me)",
+            "url": "http://127.0.0.1:8000/api/v1/auth/me",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_7",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_admissions",
+            "name": "1. Get Academic Programmes",
+            "url": "http://127.0.0.1:8000/api/v1/admissions/programmes",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "X-University-Code",
+                    "value": "NVU"
+                }
+            ]
+        },
+        {
+            "_id": "req_8",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_admissions",
+            "name": "2. Register Applicant Account",
+            "url": "http://127.0.0.1:8000/api/v1/admissions/register",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "X-University-Code",
+                    "value": "NVU"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"name\": \"Emmanuel Ojo\",\n    \"email\": \"emmanuel.ojo@example.com\",\n    \"phone\": \"08099887766\",\n    \"password\": \"secret123\"\n}"
+            }
+        },
+        {
+            "_id": "req_9",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_admissions",
+            "name": "3. Check Application Status",
+            "url": "http://127.0.0.1:8000/api/v1/admissions/status",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{applicant_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_10",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_admissions",
+            "name": "4. Accept Offer & Auto-Matriculate",
+            "url": "http://127.0.0.1:8000/api/v1/admissions/matriculate",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{applicant_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "[]"
+            }
+        },
+        {
+            "_id": "req_11",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_courses",
+            "name": "1. View University Course Catalog",
+            "url": "http://127.0.0.1:8000/api/v1/courses?department_id=1&level=300L&semester=first",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_12",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_courses",
+            "name": "2. Student Register Semester Courses",
+            "url": "http://127.0.0.1:8000/api/v1/courses/register",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"academic_session\": \"2025/2026\",\n    \"semester\": \"first\",\n    \"course_ids\": [\n        1,\n        2,\n        3\n    ]\n}"
+            }
+        },
+        {
+            "_id": "req_13",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_courses",
+            "name": "3. View My Registered Courses",
+            "url": "http://127.0.0.1:8000/api/v1/courses/my-registration?session=2025/2026&semester=first",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_14",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_courses",
+            "name": "4. HOD Approve Course Registration",
+            "url": "http://127.0.0.1:8000/api/v1/courses/registrations/1/approve",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"remarks\": \"Approved. Verified course prerequisites.\"\n}"
+            }
+        },
+        {
+            "_id": "req_15",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_lms",
+            "name": "1. View Course Materials",
+            "url": "http://127.0.0.1:8000/api/v1/courses/1/materials",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_16",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_lms",
+            "name": "2. Upload Course Material (Lecturer)",
+            "url": "http://127.0.0.1:8000/api/v1/courses/1/materials",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"title\": \"Module 4: Graph Algorithms & Dynamic Programming\",\n    \"file_url\": \"https://novica.edu.ng/materials/csc301_mod4.pdf\",\n    \"file_type\": \"pdf\",\n    \"size_bytes\": 4500000\n}"
+            }
+        },
+        {
+            "_id": "req_17",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_lms",
+            "name": "3. View Course Assignments",
+            "url": "http://127.0.0.1:8000/api/v1/courses/1/assignments",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_18",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_lms",
+            "name": "4. Submit Assignment",
+            "url": "http://127.0.0.1:8000/api/v1/assignments/1/submit",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"submission_text\": \"Implemented Dijkstra algorithm in Python with Fibonacci heap priority queue.\",\n    \"file_url\": \"https://github.com/chidi/dijkstra-lab\"\n}"
+            }
+        },
+        {
+            "_id": "req_19",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_lms",
+            "name": "5. Grade Submission (Lecturer)",
+            "url": "http://127.0.0.1:8000/api/v1/assignments/submissions/1/grade",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"score\": 19.5,\n    \"feedback\": \"Comprehensive time complexity proof provided.\"\n}"
+            }
+        },
+        {
+            "_id": "req_20",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_cbt",
+            "name": "1. List Scheduled CBT Exams",
+            "url": "http://127.0.0.1:8000/api/v1/cbt/exams",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_21",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_cbt",
+            "name": "2. Start CBT Exam Session",
+            "url": "http://127.0.0.1:8000/api/v1/cbt/exams/1/start",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "[]"
+            }
+        },
+        {
+            "_id": "req_22",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_cbt",
+            "name": "3. Heartbeat & Answers Sync",
+            "url": "http://127.0.0.1:8000/api/v1/cbt/sessions/1/heartbeat",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"current_question_id\": 1,\n    \"selected_option\": \"C\",\n    \"seconds_remaining\": 1750\n}"
+            }
+        },
+        {
+            "_id": "req_23",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_cbt",
+            "name": "4. Submit CBT Exam & Auto-Grade",
+            "url": "http://127.0.0.1:8000/api/v1/cbt/sessions/1/submit",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"answers\": {\n        \"1\": \"C\",\n        \"2\": \"B\",\n        \"3\": \"A\"\n    }\n}"
+            }
+        },
+        {
+            "_id": "req_24",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_results",
+            "name": "1. Upload Student Score",
+            "url": "http://127.0.0.1:8000/api/v1/results/upload",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"student_id\": 1,\n    \"course_id\": 1,\n    \"academic_session\": \"2025/2026\",\n    \"semester\": \"first\",\n    \"ca_score\": 28.5,\n    \"exam_score\": 58\n}"
+            }
+        },
+        {
+            "_id": "req_25",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_results",
+            "name": "2. Get Semester Result Slip",
+            "url": "http://127.0.0.1:8000/api/v1/results/semester?session=2025/2026&semester=first",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_26",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_results",
+            "name": "3. Download Official Transcript PDF",
+            "url": "http://127.0.0.1:8000/api/v1/results/transcript",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_27",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_finance",
+            "name": "1. List My Invoices",
+            "url": "http://127.0.0.1:8000/api/v1/finance/invoices",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_28",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_finance",
+            "name": "2. Generate Tuition Fee Invoice",
+            "url": "http://127.0.0.1:8000/api/v1/finance/invoices/generate",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"session\": \"2025/2026\",\n    \"type\": \"tuition\"\n}"
+            }
+        },
+        {
+            "_id": "req_29",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_finance",
+            "name": "3. Get Invoice Details",
+            "url": "http://127.0.0.1:8000/api/v1/finance/invoices/1",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_30",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_finance",
+            "name": "4. Initiate Split Gateway Payment",
+            "url": "http://127.0.0.1:8000/api/v1/finance/pay",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"invoice_id\": 1,\n    \"gateway\": \"paystack\"\n}"
+            }
+        },
+        {
+            "_id": "req_31",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_finance",
+            "name": "5. Verify Gateway Payment Reference",
+            "url": "http://127.0.0.1:8000/api/v1/finance/verify/PAY-TEST-REF-001",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "[]"
+            }
+        },
+        {
+            "_id": "req_32",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_finance",
+            "name": "6. Download Payment Receipt PDF",
+            "url": "http://127.0.0.1:8000/api/v1/finance/receipts/RCT-NVU-2026-0001/pdf",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_33",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_hostels",
+            "name": "1. List Available Hostels",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/hostels",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_34",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_hostels",
+            "name": "2. View Hostel Rooms & Bed Spaces",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/hostels/1/rooms",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_35",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_hostels",
+            "name": "3. Reserve Bed Space (Atomic Mutex)",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/hostels/reserve-bed",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"bed_space_id\": 1\n}"
+            }
+        },
+        {
+            "_id": "req_36",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_hostels",
+            "name": "4. View My Hostel Allocation",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/hostels/my-allocation",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_37",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_hostels",
+            "name": "5. Sign Tenancy Agreement",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/hostels/agreement",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"allocation_id\": 1,\n    \"agreed\": true\n}"
+            }
+        },
+        {
+            "_id": "req_38",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_hostels",
+            "name": "6. Submit Maintenance Ticket",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/hostels/maintenance",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"hostel_id\": 1,\n    \"category\": \"plumbing\",\n    \"description\": \"Low water pressure in room shower.\"\n}"
+            }
+        },
+        {
+            "_id": "req_39",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_hostels",
+            "name": "7. View Maintenance Tickets",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/hostels/maintenance",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_40",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_clinic",
+            "name": "1. Register Electronic Health Card",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/clinic/register",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"blood_group\": \"O+\",\n    \"genotype\": \"AA\",\n    \"allergies\": \"Penicillin\",\n    \"emergency_contact_name\": \"Dr. Paul Okonkwo\",\n    \"emergency_contact_phone\": \"08011223344\"\n}"
+            }
+        },
+        {
+            "_id": "req_41",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_clinic",
+            "name": "2. View Health Card Telemetry",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/clinic/card",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_42",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_clinic",
+            "name": "3. Book Doctor Consultation",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/clinic/appointments",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"reason\": \"Routine medical examination and prescription refill.\",\n    \"appointment_date\": \"2026-09-10\"\n}"
+            }
+        },
+        {
+            "_id": "req_43",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_clinic",
+            "name": "4. View Clinic Appointments",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/clinic/appointments",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_44",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_library",
+            "name": "1. Search Library Catalog & Repositories",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/library/catalog?query=Algorithms",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_45",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_library",
+            "name": "2. Reserve Physical Book",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/library/reserve",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"library_item_id\": 1\n}"
+            }
+        },
+        {
+            "_id": "req_46",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_library",
+            "name": "3. View My Borrowed Books",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/library/my-borrowed",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_47",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_library",
+            "name": "4. Return Borrowed Book",
+            "url": "http://127.0.0.1:8000/api/v1/facilities/library/loans/1/return",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "[]"
+            }
+        },
+        {
+            "_id": "req_48",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_approvals",
+            "name": "1. Submit Approval Request",
+            "url": "http://127.0.0.1:8000/api/v1/approvals/requests",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"type\": \"course_form_signing\",\n    \"title\": \"Semester Course Form Signing (CSC 300L)\",\n    \"reason\": \"Completed full credit registration.\"\n}"
+            }
+        },
+        {
+            "_id": "req_49",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_approvals",
+            "name": "2. View Requests Pending My Action",
+            "url": "http://127.0.0.1:8000/api/v1/approvals/requests?filter=pending_my_action",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_50",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_approvals",
+            "name": "3. Act on Approval Step (Approve / Reject)",
+            "url": "http://127.0.0.1:8000/api/v1/approvals/requests/1/action",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"action\": \"approved\",\n    \"comments\": \"Prerequisites confirmed. Approved.\"\n}"
+            }
+        },
+        {
+            "_id": "req_51",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_identity",
+            "name": "1. View Digital ID Card & Security Hash",
+            "url": "http://127.0.0.1:8000/api/v1/identity/card",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_52",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_identity",
+            "name": "2. Download Digital ID Card PDF",
+            "url": "http://127.0.0.1:8000/api/v1/identity/card/pdf",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_53",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "1. Candidate SPS Research Dashboard & Early Warning Radar",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/dashboard",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{pg_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_54",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "2. Submit Research Proposal",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/proposals",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{pg_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"title\": \"Decentralized Federated Learning Architectures for Latency Optimization\",\n    \"abstract\": \"Doctoral research focusing on zero-knowledge gradient aggregation for distributed edge clusters.\",\n    \"document_url\": \"https://novica.edu.ng/pg/proposals/chidi_doctoral.pdf\"\n}"
+            }
+        },
+        {
+            "_id": "req_55",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "3. List Research Proposals",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/proposals",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{pg_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_56",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "4. Supervisor / Board Review Proposal",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/proposals/1/review",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"status\": \"approved\",\n    \"reviewer_feedback\": \"Commendable theoretical formulation. Proceed to testbed.\",\n    \"defense_score\": 88.5,\n    \"defense_date\": \"2026-09-08\"\n}"
+            }
+        },
+        {
+            "_id": "req_57",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "5. View Thesis Chapter Milestones",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/milestones",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{pg_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_58",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "6. Submit Thesis Chapter Draft",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/milestones/4/submit",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{pg_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"submission_url\": \"https://novica.edu.ng/pg/thesis/ch4_draft.pdf\"\n}"
+            }
+        },
+        {
+            "_id": "req_59",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "7. Supervisor Review Thesis Chapter",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/milestones/4/review",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"status\": \"approved\",\n    \"supervisor_comments\": \"Empirical testbed benchmarks verified. Approved.\"\n}"
+            }
+        },
+        {
+            "_id": "req_60",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "8. Log Supervision Meeting",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/supervision-logs",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{pg_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"staff_id\": 1,\n    \"meeting_date\": \"2026-09-08\",\n    \"summary_notes\": \"Reviewed Chapter 4 experimental latency reduction.\",\n    \"next_deliverables\": \"Prepare Chapter 5 comparative charts.\"\n}"
+            }
+        },
+        {
+            "_id": "req_61",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "9. View Supervision Logs",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/supervision-logs",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{pg_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_62",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "10. Supervisor Confirm Meeting Log",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/supervision-logs/1/confirm",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{hod_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "[]"
+            }
+        },
+        {
+            "_id": "req_63",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_postgraduate",
+            "name": "11. Dean SPS Early Warning Radar Analytics",
+            "url": "http://127.0.0.1:8000/api/v1/postgraduate/early-warning",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{dean_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_64",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_ai_advisor",
+            "name": "1. Interactive Chat (Live SIS Telemetry Injected)",
+            "url": "http://127.0.0.1:8000/api/v1/ai/advisor/chat",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"prompt\": \"What is my current CGPA, academic standing, and what courses should I prioritize for graduation with honors?\"\n}"
+            }
+        },
+        {
+            "_id": "req_65",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_ai_advisor",
+            "name": "2. View Conversation History",
+            "url": "http://127.0.0.1:8000/api/v1/ai/advisor/history",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_66",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_ai_advisor",
+            "name": "3. Clear Conversation Session",
+            "url": "http://127.0.0.1:8000/api/v1/ai/advisor/clear",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "[]"
+            }
+        },
+        {
+            "_id": "req_67",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_career",
+            "name": "1. View Student Career Profile",
+            "url": "http://127.0.0.1:8000/api/v1/career/profile",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_68",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_career",
+            "name": "2. Add Skill to Profile",
+            "url": "http://127.0.0.1:8000/api/v1/career/skills",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"name\": \"Docker & Kubernetes\",\n    \"category\": \"technical\",\n    \"proficiency_level\": \"advanced\"\n}"
+            }
+        },
+        {
+            "_id": "req_69",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_career",
+            "name": "3. Add Portfolio Project",
+            "url": "http://127.0.0.1:8000/api/v1/career/projects",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"title\": \"Campus Distributed Microservices Gateway\",\n    \"description\": \"High-throughput institutional microservices proxy handling 10k req/s.\",\n    \"technologies\": [\n        \"PHP 8.3\",\n        \"Laravel 11\",\n        \"Redis\",\n        \"PostgreSQL\"\n    ],\n    \"github_url\": \"https://github.com/chidi/campus-gateway\"\n}"
+            }
+        },
+        {
+            "_id": "req_70",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_career",
+            "name": "4. Add Professional Certification",
+            "url": "http://127.0.0.1:8000/api/v1/career/certifications",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"title\": \"AWS Certified Solutions Architect\",\n    \"issuer\": \"Amazon Web Services\",\n    \"issue_date\": \"2025-11-15\",\n    \"credential_url\": \"https://aws.amazon.com/verification/AWS-SAA-88231\"\n}"
+            }
+        },
+        {
+            "_id": "req_71",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_career",
+            "name": "5. Browse Campus Jobs & Internships",
+            "url": "http://127.0.0.1:8000/api/v1/career/jobs?job_type=internship",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_72",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_career",
+            "name": "6. Download ATS-Friendly CV PDF",
+            "url": "http://127.0.0.1:8000/api/v1/career/cv/pdf",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_73",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_collaboration",
+            "name": "1. List Active Study Groups",
+            "url": "http://127.0.0.1:8000/api/v1/collaboration/study-groups",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_74",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_collaboration",
+            "name": "2. Create Study Group",
+            "url": "http://127.0.0.1:8000/api/v1/collaboration/study-groups",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"name\": \"Distributed Systems & Concurrency Cell\",\n    \"course_id\": 1,\n    \"description\": \"Deep dive into Raft consensus, Paxos and distributed transactions.\",\n    \"max_members\": 8,\n    \"meeting_schedule\": \"Saturdays 10:00 AM\"\n}"
+            }
+        },
+        {
+            "_id": "req_75",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_collaboration",
+            "name": "3. Join Study Group",
+            "url": "http://127.0.0.1:8000/api/v1/collaboration/study-groups/1/join",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{pg_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "[]"
+            }
+        },
+        {
+            "_id": "req_76",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_collaboration",
+            "name": "4. View Study Group Messages",
+            "url": "http://127.0.0.1:8000/api/v1/collaboration/study-groups/1/messages",
+            "method": "GET",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ]
+        },
+        {
+            "_id": "req_77",
+            "colId": "netzertech-complete-suite-api",
+            "containerId": "folder_collaboration",
+            "name": "5. Post Message to Study Group",
+            "url": "http://127.0.0.1:8000/api/v1/collaboration/study-groups/1/messages",
+            "method": "POST",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{student_token}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"message\": \"Uploaded the consensus algorithm slide deck for discussion this weekend.\"\n}"
+            }
+        }
+    ]
 }

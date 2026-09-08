@@ -10,8 +10,12 @@ use App\Http\Controllers\Api\V1\Facilities\ClinicController;
 use App\Http\Controllers\Api\V1\Facilities\HostelController;
 use App\Http\Controllers\Api\V1\Facilities\LibraryController;
 use App\Http\Controllers\Api\V1\Finance\FinanceController;
+use App\Http\Controllers\Api\V1\Ai\AIAdvisorController;
+use App\Http\Controllers\Api\V1\Career\CareerController;
+use App\Http\Controllers\Api\V1\Collaboration\StudyGroupController;
 use App\Http\Controllers\Api\V1\Identity\DigitalIdController;
 use App\Http\Controllers\Api\V1\Lms\LmsController;
+use App\Http\Controllers\Api\V1\Postgraduate\PostgraduateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -144,6 +148,47 @@ Route::prefix('v1')->group(function () {
         Route::prefix('identity')->group(function () {
             Route::get('/card', [DigitalIdController::class, 'getCard']);
             Route::get('/card/pdf', [DigitalIdController::class, 'downloadPdf']);
+        });
+
+        // ── Week 4: Postgraduate School (SPS) Engine ───────────────────────
+        Route::prefix('postgraduate')->group(function () {
+            Route::get('/dashboard', [PostgraduateController::class, 'dashboard']);
+            Route::get('/proposals', [PostgraduateController::class, 'getProposals']);
+            Route::post('/proposals', [PostgraduateController::class, 'submitProposal']);
+            Route::post('/proposals/{id}/review', [PostgraduateController::class, 'reviewProposal']);
+            Route::get('/milestones', [PostgraduateController::class, 'getMilestones']);
+            Route::post('/milestones/{id}/submit', [PostgraduateController::class, 'submitMilestone']);
+            Route::post('/milestones/{id}/review', [PostgraduateController::class, 'reviewMilestone']);
+            Route::get('/supervision-logs', [PostgraduateController::class, 'getSupervisionLogs']);
+            Route::post('/supervision-logs', [PostgraduateController::class, 'logSupervisionMeeting']);
+            Route::post('/supervision-logs/{id}/confirm', [PostgraduateController::class, 'confirmSupervisionMeeting']);
+            Route::get('/early-warning', [PostgraduateController::class, 'earlyWarning']);
+        });
+
+        // ── Week 4: Context-Aware AI Academic Advisor ─────────────────────
+        Route::prefix('ai/advisor')->group(function () {
+            Route::post('/chat', [AIAdvisorController::class, 'chat']);
+            Route::get('/history', [AIAdvisorController::class, 'history']);
+            Route::post('/clear', [AIAdvisorController::class, 'clearHistory']);
+        });
+
+        // ── Week 4: Career Success Portal & CV Generator ──────────────────
+        Route::prefix('career')->group(function () {
+            Route::get('/profile', [CareerController::class, 'profile']);
+            Route::post('/skills', [CareerController::class, 'addSkill']);
+            Route::post('/projects', [CareerController::class, 'addProject']);
+            Route::post('/certifications', [CareerController::class, 'addCertification']);
+            Route::get('/jobs', [CareerController::class, 'jobs']);
+            Route::get('/cv/pdf', [CareerController::class, 'downloadCv']);
+        });
+
+        // ── Week 4: Peer Collaboration & Study Groups ─────────────────────
+        Route::prefix('collaboration/study-groups')->group(function () {
+            Route::get('/', [StudyGroupController::class, 'index']);
+            Route::post('/', [StudyGroupController::class, 'store']);
+            Route::post('/{id}/join', [StudyGroupController::class, 'join']);
+            Route::get('/{id}/messages', [StudyGroupController::class, 'messages']);
+            Route::post('/{id}/messages', [StudyGroupController::class, 'postMessage']);
         });
     });
 });

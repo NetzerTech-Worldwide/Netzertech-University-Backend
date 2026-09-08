@@ -32,11 +32,22 @@ use App\Models\Hostel;
 use App\Models\HostelAllocation;
 use App\Models\HostelMaintenanceTicket;
 use App\Models\HostelRoom;
+use App\Models\CareerJob;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\LibraryBorrowRecord;
 use App\Models\LibraryItem;
 use App\Models\Payment;
+use App\Models\PgProposal;
+use App\Models\PgStudentProfile;
+use App\Models\PgSupervisionLog;
+use App\Models\PgThesisMilestone;
+use App\Models\StudentCertification;
+use App\Models\StudentProject;
+use App\Models\StudentSkill;
+use App\Models\StudyGroup;
+use App\Models\StudyGroupMember;
+use App\Models\StudyGroupMessage;
 use App\Services\Academics\GpaCalculatorService;
 use App\Services\Identity\DigitalIdCardService;
 use Illuminate\Database\Seeder;
@@ -1070,6 +1081,251 @@ class DatabaseSeeder extends Seeder
                 'assigned_staff_id' => $facultyCIT->dean_staff_id,
                 'required_role' => 'dean',
                 'action' => 'pending',
+            ]
+        );
+
+        // ═════════════════════════════════════════════════════════════════════
+        // ── WEEK 4: SEED POSTGRADUATE SCHOOL (SPS) DATA ──────────────────────
+        // ═════════════════════════════════════════════════════════════════════
+
+        // Postgraduate Programme
+        $progPhD = Programme::firstOrCreate(
+            ['university_id' => $uniNovica->id, 'code' => 'PHD-CSC'],
+            ['department_id' => $deptCSC->id, 'name' => 'Ph.D. Computer Science', 'degree' => 'Ph.D.', 'duration_years' => 3]
+        );
+
+        // Postgraduate Candidate User (Fatima Danladi)
+        $pgUser = User::firstOrCreate(
+            ['email' => 'fatima.pg@novicauniversity.edu.ng'],
+            [
+                'university_id' => $uniNovica->id,
+                'name' => 'Fatima Danladi',
+                'phone' => '08088990011',
+                'user_type' => UserType::STUDENT->value,
+                'password' => Hash::make('password123'),
+                'is_active' => true,
+            ]
+        );
+        $pgUser->syncRoles(['postgraduate', 'student']);
+
+        $pgStudent = Student::updateOrCreate(
+            ['user_id' => $pgUser->id],
+            [
+                'university_id' => $uniNovica->id,
+                'matric_number' => 'NVU/PG/2024/0088',
+                'jamb_reg_no' => 'PG2024987654',
+                'faculty_id' => $facultyCIT->id,
+                'department_id' => $deptCSC->id,
+                'programme_id' => $progPhD->id,
+                'level' => '800L',
+                'academic_session' => '2025/2026',
+                'current_semester' => 'first',
+                'entry_mode' => 'PG',
+                'cgpa' => 4.80,
+                'standing' => 'Distinction',
+                'digital_id_token' => hash('sha256', 'NVU/PG/2024/0088-TOKEN'),
+            ]
+        );
+
+        $pgProfile = PgStudentProfile::firstOrCreate(
+            ['student_id' => $pgStudent->id],
+            [
+                'university_id' => $uniNovica->id,
+                'research_title' => 'Decentralized Federated Learning Architectures for Latency Optimization in Edge Networks',
+                'current_stage' => 'internal_defense',
+                'primary_supervisor_staff_id' => $hodNovicaStaff?->id,
+                'co_supervisor_staff_id' => $facultyCIT->dean_staff_id,
+                'expected_graduation_date' => now()->addMonths(14)->toDateString(),
+            ]
+        );
+
+        // Research Proposal
+        PgProposal::firstOrCreate(
+            [
+                'student_id' => $pgStudent->id,
+                'title' => 'Decentralized Federated Learning Architectures for Latency Optimization in Edge Networks',
+            ],
+            [
+                'university_id' => $uniNovica->id,
+                'abstract' => 'This doctoral research explores novel consensus topologies and privacy-preserving gradient aggregation algorithms for resource-constrained edge computing clusters.',
+                'document_url' => 'https://novica.edu.ng/pg/proposals/NVU_PG_2024_0088_proposal.pdf',
+                'status' => 'approved',
+                'reviewer_feedback' => 'Commendable theoretical formulation. Approved to proceed with experimental testbed construction.',
+                'defense_score' => 86.50,
+                'defense_date' => now()->subMonths(4)->toDateString(),
+            ]
+        );
+
+        // Thesis Chapter Milestones
+        $chapters = [
+            ['chapter_number' => 1, 'title' => 'Introduction & Problem Statement', 'status' => 'approved'],
+            ['chapter_number' => 2, 'title' => 'Literature Review & Theoretical Framework', 'status' => 'approved'],
+            ['chapter_number' => 3, 'title' => 'System Architecture & Algorithmic Methodology', 'status' => 'approved'],
+            ['chapter_number' => 4, 'title' => 'Experimental Implementation & Edge Testbed', 'status' => 'submitted'],
+            ['chapter_number' => 5, 'title' => 'Performance Evaluation & Latency Benchmarks', 'status' => 'pending'],
+            ['chapter_number' => 6, 'title' => 'Conclusion, Ethical Considerations & Future Work', 'status' => 'pending'],
+        ];
+
+        foreach ($chapters as $ch) {
+            PgThesisMilestone::firstOrCreate(
+                [
+                    'student_id' => $pgStudent->id,
+                    'chapter_number' => $ch['chapter_number'],
+                ],
+                [
+                    'university_id' => $uniNovica->id,
+                    'title' => $ch['title'],
+                    'status' => $ch['status'],
+                    'submission_url' => $ch['status'] !== 'pending' ? 'https://novica.edu.ng/pg/thesis/ch_' . $ch['chapter_number'] . '.pdf' : null,
+                    'supervisor_comments' => $ch['status'] === 'approved' ? 'Rigorous analysis, approved without corrections.' : null,
+                    'submitted_at' => $ch['status'] !== 'pending' ? now()->subMonths(2) : null,
+                    'reviewed_at' => $ch['status'] === 'approved' ? now()->subMonth() : null,
+                ]
+            );
+        }
+
+        // Supervision Meeting Log
+        PgSupervisionLog::firstOrCreate(
+            [
+                'student_id' => $pgStudent->id,
+                'meeting_date' => now()->subDays(10)->toDateString(),
+            ],
+            [
+                'university_id' => $uniNovica->id,
+                'staff_id' => $hodNovicaStaff?->id,
+                'summary_notes' => 'Reviewed Chapter 4 simulation results on 16-node Kubernetes cluster. Observed 34% reduction in straggler penalty.',
+                'next_deliverables' => 'Prepare empirical latency chart comparisons for Chapter 5 by end of month.',
+                'status' => 'confirmed',
+            ]
+        );
+
+        // ═════════════════════════════════════════════════════════════════════
+        // ── WEEK 4: SEED CAREER SUCCESS & CV PORTAL ──────────────────────────
+        // ═════════════════════════════════════════════════════════════════════
+
+        // Skills for Chidi Okonkwo
+        $skills = [
+            ['name' => 'Laravel & PHP 8.3', 'category' => 'technical', 'proficiency_level' => 'expert'],
+            ['name' => 'PostgreSQL & Query Optimization', 'category' => 'technical', 'proficiency_level' => 'advanced'],
+            ['name' => 'Docker & Containerization', 'category' => 'technical', 'proficiency_level' => 'intermediate'],
+            ['name' => 'RESTful API Design & TDD', 'category' => 'technical', 'proficiency_level' => 'expert'],
+            ['name' => 'Agile Sprint Leadership', 'category' => 'soft', 'proficiency_level' => 'advanced'],
+        ];
+
+        foreach ($skills as $skill) {
+            StudentSkill::firstOrCreate(
+                ['student_id' => $studentNovica->id, 'name' => $skill['name']],
+                array_merge($skill, ['university_id' => $uniNovica->id])
+            );
+        }
+
+        // Portfolio Projects
+        StudentProject::firstOrCreate(
+            ['student_id' => $studentNovica->id, 'title' => 'Multi-Tenant Campus Microservices Gateway'],
+            [
+                'university_id' => $uniNovica->id,
+                'description' => 'High-throughput institutional microservices proxy handling 10k concurrent requests with Redis token-bucket rate limiting.',
+                'technologies' => ['PHP 8.3', 'Laravel 11', 'Redis', 'PostgreSQL', 'Docker'],
+                'github_url' => 'https://github.com/chidi/campus-gateway',
+                'live_url' => 'https://gateway.demo.novica.edu.ng',
+            ]
+        );
+
+        StudentProject::firstOrCreate(
+            ['student_id' => $studentNovica->id, 'title' => 'Automated Clinical Triage & EHR System'],
+            [
+                'university_id' => $uniNovica->id,
+                'description' => 'Real-time student health registry and telemedicine triage queue built with WebSockets and DomPDF.',
+                'technologies' => ['Vue 3', 'Laravel Sanctum', 'TailwindCSS', 'PostgreSQL'],
+                'github_url' => 'https://github.com/chidi/campus-ehr',
+                'live_url' => null,
+            ]
+        );
+
+        // Certifications
+        StudentCertification::firstOrCreate(
+            ['student_id' => $studentNovica->id, 'title' => 'AWS Certified Solutions Architect – Associate'],
+            [
+                'university_id' => $uniNovica->id,
+                'issuer' => 'Amazon Web Services',
+                'issue_date' => '2025-11-15',
+                'credential_url' => 'https://aws.amazon.com/verification/AWS-SAA-88231',
+            ]
+        );
+
+        // Campus Job Board
+        $jobs = [
+            [
+                'title' => 'Junior Cloud Backend Engineer (Graduate Intern)',
+                'company' => 'NetzerTech Systems Worldwide',
+                'location' => 'Lagos / Hybrid',
+                'job_type' => 'internship',
+                'salary_range' => '₦250,000 - ₦350,000 / month',
+                'description' => 'Seeking ambitious computer science finalists to contribute to high-scale enterprise multi-tenant architectures.',
+                'requirements' => ['Proficiency in Laravel and PostgreSQL', 'Solid understanding of REST APIs and Git', 'Minimum CGPA of 3.50/5.00'],
+                'deadline' => now()->addMonths(2)->toDateString(),
+                'contact_email' => 'careers@netzertech.com',
+                'is_active' => true,
+            ],
+            [
+                'title' => 'AI Research Assistant (Doctoral Fellowship)',
+                'company' => 'Novica Centre for Intelligent Systems',
+                'location' => 'Novica Main Campus, Lagos',
+                'job_type' => 'part_time',
+                'salary_range' => '₦180,000 / month + Tuition Waiver',
+                'description' => 'Collaborate with faculty leads on federated learning benchmarks, dataset labeling, and edge GPU deployments.',
+                'requirements' => ['Enrolled in Postgraduate or 400L Computing Programme', 'Python, PyTorch or TensorFlow experience'],
+                'deadline' => now()->addMonth()->toDateString(),
+                'contact_email' => 'sps-research@novicauniversity.edu.ng',
+                'is_active' => true,
+            ],
+        ];
+
+        foreach ($jobs as $j) {
+            CareerJob::firstOrCreate(
+                ['university_id' => $uniNovica->id, 'title' => $j['title']],
+                array_merge($j, ['university_id' => $uniNovica->id])
+            );
+        }
+
+        // ═════════════════════════════════════════════════════════════════════
+        // ── WEEK 4: SEED PEER COLLABORATION & STUDY GROUPS ───────────────────
+        // ═════════════════════════════════════════════════════════════════════
+
+        $courseCSC301 = Course::where('university_id', $uniNovica->id)->where('code', 'CSC 301')->first();
+
+        $group = StudyGroup::firstOrCreate(
+            ['university_id' => $uniNovica->id, 'name' => 'CSC 301 Advanced Algorithms Study Cell'],
+            [
+                'course_id' => $courseCSC301?->id,
+                'creator_student_id' => $studentNovica->id,
+                'description' => 'Dedicated study syndicate tackling dynamic programming, Dijkstra graph proofs, and Big-O complexities for midterm exam prep.',
+                'max_members' => 10,
+                'meeting_schedule' => 'Every Tuesday & Thursday at 4:30 PM (Library Room 3B)',
+                'is_active' => true,
+            ]
+        );
+
+        StudyGroupMember::firstOrCreate(
+            [
+                'study_group_id' => $group->id,
+                'student_id' => $studentNovica->id,
+            ],
+            [
+                'university_id' => $uniNovica->id,
+                'role' => 'lead',
+                'joined_at' => now()->subWeeks(2),
+            ]
+        );
+
+        StudyGroupMessage::firstOrCreate(
+            [
+                'study_group_id' => $group->id,
+                'student_id' => $studentNovica->id,
+                'message' => 'Welcome colleagues! I have uploaded the greedy algorithm problem set. Review problem #4 before our Thursday session.',
+            ],
+            [
+                'university_id' => $uniNovica->id,
             ]
         );
     }
