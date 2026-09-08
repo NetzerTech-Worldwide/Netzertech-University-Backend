@@ -10,8 +10,9 @@ services:
       - ./:/var/www/html
     environment:
       APP_NAME: "Netzertech University Platform"
-      APP_ENV: production
-      APP_DEBUG: "false"
+      APP_ENV: "${APP_ENV:-local}"
+      APP_KEY: "${APP_KEY:-base64:IuH2eVHJTf6/BcM5J37ChN2783W49gIQyFvoVEhZ5x4=}"
+      APP_DEBUG: "${APP_DEBUG:-true}"
       APP_URL: http://localhost:8000
       DB_CONNECTION: pgsql
       DB_HOST: postgres
@@ -23,7 +24,7 @@ services:
       REDIS_PASSWORD: null
       REDIS_PORT: 6379
       QUEUE_CONNECTION: redis
-      BROADCAST_CONNECTION: reverb
+      BROADCAST_CONNECTION: log
     networks:
       - netzertech_network
     depends_on:
@@ -70,16 +71,29 @@ services:
     networks:
       - netzertech_network
 
-  horizon:
+  queue:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: netzertech_horizon
+    container_name: netzertech_queue
     restart: unless-stopped
-    command: php artisan horizon
+    command: php artisan queue:work --sleep=3 --tries=3
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
+    environment:
+      APP_NAME: "Netzertech University Platform"
+      APP_ENV: "${APP_ENV:-local}"
+      APP_KEY: "${APP_KEY:-base64:IuH2eVHJTf6/BcM5J37ChN2783W49gIQyFvoVEhZ5x4=}"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: netzertech_university
+      DB_USERNAME: postgres
+      DB_PASSWORD: secret_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      QUEUE_CONNECTION: redis
     networks:
       - netzertech_network
     depends_on:
@@ -87,23 +101,24 @@ services:
       - redis
       - postgres
 
-  reverb:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: netzertech_reverb
-    restart: unless-stopped
-    command: php artisan reverb:start --host=0.0.0.0 --port=8080
-    working_dir: /var/www/html
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./:/var/www/html
-    networks:
-      - netzertech_network
-    depends_on:
-      - app
-      - redis
+  # Optional WebSocket server (Enable when laravel/reverb is installed via composer)
+  # reverb:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: netzertech_reverb
+  #   restart: unless-stopped
+  #   command: php artisan reverb:start --host=0.0.0.0 --port=8080
+  #   working_dir: /var/www/html
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./:/var/www/html
+  #   networks:
+  #     - netzertech_network
+  #   depends_on:
+  #     - app
+  #     - redis
 
 networks:
   netzertech_network:
