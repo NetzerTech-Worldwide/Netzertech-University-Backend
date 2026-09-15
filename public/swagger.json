@@ -1,0 +1,4761 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Netzertech University Multi-Tenant API Suite",
+    "description": "## Netzertech University Multi-Tenant Enterprise Backend API\n\nWelcome to the **Netzertech University** interactive API documentation. This comprehensive suite powers multi-institutional academic workflows, digital admissions, learning management (LMS), online CBT assessments, financial billing & split gateway payments, campus facilities, digital ID verification, postgraduate school governance, AI academic advising, career planning, and peer study groups.\n\n### Multi-Tenancy\nAll requests require the university tenant identification header:\n```http\nX-University-Code: NVU\n```\n*(Example codes: `NVU` for Novica University, `APEX` for Apex Institute of Technology)*\n\n### Authentication\nProtected endpoints require a Laravel Sanctum Bearer Token:\n```http\nAuthorization: Bearer <your_access_token>\n```\n",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Netzertech Worldwide API Engineering",
+      "url": "https://github.com/NetzerTech-Worldwide/Netzertech-University-Backend"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Current Environment / Relative Origin"
+    },
+    {
+      "url": "http://127.0.0.1:8000",
+      "description": "Local Development Server"
+    },
+    {
+      "url": "https://netzertech-university-backend.vercel.app",
+      "description": "Production Vercel Serverless"
+    }
+  ],
+  "tags": [
+    {
+      "name": "01. Authentication & Multi-Tenancy",
+      "description": "Operations related to 01. Authentication & Multi-Tenancy"
+    },
+    {
+      "name": "02. Admissions Lifecycle",
+      "description": "Operations related to 02. Admissions Lifecycle"
+    },
+    {
+      "name": "03. Academic SIS & Course Registration",
+      "description": "Operations related to 03. Academic SIS & Course Registration"
+    },
+    {
+      "name": "04. Learning Management System (LMS)",
+      "description": "Operations related to 04. Learning Management System (LMS)"
+    },
+    {
+      "name": "05. Online CBT Examination Engine",
+      "description": "Operations related to 05. Online CBT Examination Engine"
+    },
+    {
+      "name": "06. Results, NUC 5.0 CGPA & Transcripts",
+      "description": "Operations related to 06. Results, NUC 5.0 CGPA & Transcripts"
+    },
+    {
+      "name": "07. Finance, Invoicing & Gateway Split Payments",
+      "description": "Operations related to 07. Finance, Invoicing & Gateway Split Payments"
+    },
+    {
+      "name": "08. Facilities & Hostel Bed Allocations",
+      "description": "Operations related to 08. Facilities & Hostel Bed Allocations"
+    },
+    {
+      "name": "09. Campus Health Clinic",
+      "description": "Operations related to 09. Campus Health Clinic"
+    },
+    {
+      "name": "10. Central Library & Digital Repositories",
+      "description": "Operations related to 10. Central Library & Digital Repositories"
+    },
+    {
+      "name": "11. Multi-Level Approvals Engine",
+      "description": "Operations related to 11. Multi-Level Approvals Engine"
+    },
+    {
+      "name": "12. Tamper-Proof Digital ID Cards",
+      "description": "Operations related to 12. Tamper-Proof Digital ID Cards"
+    },
+    {
+      "name": "13. Postgraduate School (SPS) Engine",
+      "description": "Operations related to 13. Postgraduate School (SPS) Engine"
+    },
+    {
+      "name": "14. Context-Aware AI Academic Advisor",
+      "description": "Operations related to 14. Context-Aware AI Academic Advisor"
+    },
+    {
+      "name": "15. Career Success Portal & CV Generator",
+      "description": "Operations related to 15. Career Success Portal & CV Generator"
+    },
+    {
+      "name": "16. Peer Collaboration & Study Groups",
+      "description": "Operations related to 16. Peer Collaboration & Study Groups"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "01. Authentication & Multi-Tenancy"
+        ],
+        "summary": "5. Login - Postgraduate Candidate",
+        "description": "5. Login - Postgraduate Candidate under 01. Authentication & Multi-Tenancy.",
+        "operationId": "post__api_v1_auth_login_5__Login___Postgraduate_Candidate",
+        "parameters": [
+          {
+            "name": "X-University-Code",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "NVU",
+              "enum": [
+                "NVU",
+                "APEX"
+              ]
+            },
+            "description": "Multi-tenant University Code (NVU = Novica University, APEX = Apex Institute)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "identifier": {
+                    "type": "string",
+                    "example": "fatima.pg@novicauniversity.edu.ng"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  }
+                }
+              },
+              "example": {
+                "identifier": "fatima.pg@novicauniversity.edu.ng",
+                "password": "password123"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "tags": [
+          "01. Authentication & Multi-Tenancy"
+        ],
+        "summary": "6. Current User Profile (Me)",
+        "description": "6. Current User Profile (Me) under 01. Authentication & Multi-Tenancy.",
+        "operationId": "get__api_v1_auth_me_6__Current_User_Profile__Me_",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admissions/programmes": {
+      "get": {
+        "tags": [
+          "02. Admissions Lifecycle"
+        ],
+        "summary": "1. Get Academic Programmes",
+        "description": "1. Get Academic Programmes under 02. Admissions Lifecycle.",
+        "operationId": "get__api_v1_admissions_programmes_1__Get_Academic_Programmes",
+        "parameters": [
+          {
+            "name": "X-University-Code",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "NVU",
+              "enum": [
+                "NVU",
+                "APEX"
+              ]
+            },
+            "description": "Multi-tenant University Code (NVU = Novica University, APEX = Apex Institute)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admissions/register": {
+      "post": {
+        "tags": [
+          "02. Admissions Lifecycle"
+        ],
+        "summary": "2. Register Applicant Account",
+        "description": "2. Register Applicant Account under 02. Admissions Lifecycle.",
+        "operationId": "post__api_v1_admissions_register_2__Register_Applicant_Account",
+        "parameters": [
+          {
+            "name": "X-University-Code",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "NVU",
+              "enum": [
+                "NVU",
+                "APEX"
+              ]
+            },
+            "description": "Multi-tenant University Code (NVU = Novica University, APEX = Apex Institute)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Emmanuel Ojo"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "emmanuel.ojo@example.com"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "08099887766"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "secret123"
+                  }
+                }
+              },
+              "example": {
+                "name": "Emmanuel Ojo",
+                "email": "emmanuel.ojo@example.com",
+                "phone": "08099887766",
+                "password": "secret123"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admissions/status": {
+      "get": {
+        "tags": [
+          "02. Admissions Lifecycle"
+        ],
+        "summary": "3. Check Application Status",
+        "description": "3. Check Application Status under 02. Admissions Lifecycle.",
+        "operationId": "get__api_v1_admissions_status_3__Check_Application_Status",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admissions/matriculate": {
+      "post": {
+        "tags": [
+          "02. Admissions Lifecycle"
+        ],
+        "summary": "4. Accept Offer & Auto-Matriculate",
+        "description": "4. Accept Offer & Auto-Matriculate under 02. Admissions Lifecycle.",
+        "operationId": "post__api_v1_admissions_matriculate_4__Accept_Offer___Auto_Matriculate",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "example": []
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/courses": {
+      "get": {
+        "tags": [
+          "03. Academic SIS & Course Registration"
+        ],
+        "summary": "1. View University Course Catalog",
+        "description": "1. View University Course Catalog under 03. Academic SIS & Course Registration.",
+        "operationId": "get__api_v1_courses_1__View_University_Course_Catalog",
+        "parameters": [
+          {
+            "name": "department_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "description": "Filter parameter department_id"
+          },
+          {
+            "name": "level",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "300L"
+            },
+            "description": "Filter parameter level"
+          },
+          {
+            "name": "semester",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "first"
+            },
+            "description": "Filter parameter semester"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/courses/register": {
+      "post": {
+        "tags": [
+          "03. Academic SIS & Course Registration"
+        ],
+        "summary": "2. Student Register Semester Courses",
+        "description": "2. Student Register Semester Courses under 03. Academic SIS & Course Registration.",
+        "operationId": "post__api_v1_courses_register_2__Student_Register_Semester_Courses",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "academic_session": {
+                    "type": "string",
+                    "example": "2025/2026"
+                  },
+                  "semester": {
+                    "type": "string",
+                    "example": "first"
+                  },
+                  "course_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "example": 1
+                    }
+                  }
+                }
+              },
+              "example": {
+                "academic_session": "2025/2026",
+                "semester": "first",
+                "course_ids": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/courses/my-registration": {
+      "get": {
+        "tags": [
+          "03. Academic SIS & Course Registration"
+        ],
+        "summary": "3. View My Registered Courses",
+        "description": "3. View My Registered Courses under 03. Academic SIS & Course Registration.",
+        "operationId": "get__api_v1_courses_my_registration_3__View_My_Registered_Courses",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2025/2026"
+            },
+            "description": "Filter parameter session"
+          },
+          {
+            "name": "semester",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "first"
+            },
+            "description": "Filter parameter semester"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/courses/registrations/1/approve": {
+      "post": {
+        "tags": [
+          "03. Academic SIS & Course Registration"
+        ],
+        "summary": "4. HOD Approve Course Registration",
+        "description": "4. HOD Approve Course Registration under 03. Academic SIS & Course Registration.",
+        "operationId": "post__api_v1_courses_registrations_1_approve_4__HOD_Approve_Course_Registration",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "remarks": {
+                    "type": "string",
+                    "example": "Approved. Verified course prerequisites."
+                  }
+                }
+              },
+              "example": {
+                "remarks": "Approved. Verified course prerequisites."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/courses/1/materials": {
+      "get": {
+        "tags": [
+          "04. Learning Management System (LMS)"
+        ],
+        "summary": "1. View Course Materials",
+        "description": "1. View Course Materials under 04. Learning Management System (LMS).",
+        "operationId": "get__api_v1_courses_1_materials_1__View_Course_Materials",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "04. Learning Management System (LMS)"
+        ],
+        "summary": "2. Upload Course Material (Lecturer)",
+        "description": "2. Upload Course Material (Lecturer) under 04. Learning Management System (LMS).",
+        "operationId": "post__api_v1_courses_1_materials_2__Upload_Course_Material__Lecturer_",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Module 4: Graph Algorithms & Dynamic Programming"
+                  },
+                  "file_url": {
+                    "type": "string",
+                    "example": "https://novica.edu.ng/materials/csc301_mod4.pdf"
+                  },
+                  "file_type": {
+                    "type": "string",
+                    "example": "pdf"
+                  },
+                  "size_bytes": {
+                    "type": "integer",
+                    "example": 4500000
+                  }
+                }
+              },
+              "example": {
+                "title": "Module 4: Graph Algorithms & Dynamic Programming",
+                "file_url": "https://novica.edu.ng/materials/csc301_mod4.pdf",
+                "file_type": "pdf",
+                "size_bytes": 4500000
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/courses/1/assignments": {
+      "get": {
+        "tags": [
+          "04. Learning Management System (LMS)"
+        ],
+        "summary": "3. View Course Assignments",
+        "description": "3. View Course Assignments under 04. Learning Management System (LMS).",
+        "operationId": "get__api_v1_courses_1_assignments_3__View_Course_Assignments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/assignments/1/submit": {
+      "post": {
+        "tags": [
+          "04. Learning Management System (LMS)"
+        ],
+        "summary": "4. Submit Assignment",
+        "description": "4. Submit Assignment under 04. Learning Management System (LMS).",
+        "operationId": "post__api_v1_assignments_1_submit_4__Submit_Assignment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "submission_text": {
+                    "type": "string",
+                    "example": "Implemented Dijkstra algorithm in Python with Fibonacci heap priority queue."
+                  },
+                  "file_url": {
+                    "type": "string",
+                    "example": "https://github.com/chidi/dijkstra-lab"
+                  }
+                }
+              },
+              "example": {
+                "submission_text": "Implemented Dijkstra algorithm in Python with Fibonacci heap priority queue.",
+                "file_url": "https://github.com/chidi/dijkstra-lab"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assignments/submissions/1/grade": {
+      "post": {
+        "tags": [
+          "04. Learning Management System (LMS)"
+        ],
+        "summary": "5. Grade Submission (Lecturer)",
+        "description": "5. Grade Submission (Lecturer) under 04. Learning Management System (LMS).",
+        "operationId": "post__api_v1_assignments_submissions_1_grade_5__Grade_Submission__Lecturer_",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "score": {
+                    "type": "number",
+                    "example": 19.5
+                  },
+                  "feedback": {
+                    "type": "string",
+                    "example": "Comprehensive time complexity proof provided."
+                  }
+                }
+              },
+              "example": {
+                "score": 19.5,
+                "feedback": "Comprehensive time complexity proof provided."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cbt/exams": {
+      "get": {
+        "tags": [
+          "05. Online CBT Examination Engine"
+        ],
+        "summary": "1. List Scheduled CBT Exams",
+        "description": "1. List Scheduled CBT Exams under 05. Online CBT Examination Engine.",
+        "operationId": "get__api_v1_cbt_exams_1__List_Scheduled_CBT_Exams",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/cbt/exams/1/start": {
+      "post": {
+        "tags": [
+          "05. Online CBT Examination Engine"
+        ],
+        "summary": "2. Start CBT Exam Session",
+        "description": "2. Start CBT Exam Session under 05. Online CBT Examination Engine.",
+        "operationId": "post__api_v1_cbt_exams_1_start_2__Start_CBT_Exam_Session",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "example": []
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cbt/sessions/1/heartbeat": {
+      "post": {
+        "tags": [
+          "05. Online CBT Examination Engine"
+        ],
+        "summary": "3. Heartbeat & Answers Sync",
+        "description": "3. Heartbeat & Answers Sync under 05. Online CBT Examination Engine.",
+        "operationId": "post__api_v1_cbt_sessions_1_heartbeat_3__Heartbeat___Answers_Sync",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "current_question_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "selected_option": {
+                    "type": "string",
+                    "example": "C"
+                  },
+                  "seconds_remaining": {
+                    "type": "integer",
+                    "example": 1750
+                  }
+                }
+              },
+              "example": {
+                "current_question_id": 1,
+                "selected_option": "C",
+                "seconds_remaining": 1750
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cbt/sessions/1/submit": {
+      "post": {
+        "tags": [
+          "05. Online CBT Examination Engine"
+        ],
+        "summary": "4. Submit CBT Exam & Auto-Grade",
+        "description": "4. Submit CBT Exam & Auto-Grade under 05. Online CBT Examination Engine.",
+        "operationId": "post__api_v1_cbt_sessions_1_submit_4__Submit_CBT_Exam___Auto_Grade",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "answers": {
+                    "type": "object",
+                    "properties": {
+                      "1": {
+                        "type": "string",
+                        "example": "C"
+                      },
+                      "2": {
+                        "type": "string",
+                        "example": "B"
+                      },
+                      "3": {
+                        "type": "string",
+                        "example": "A"
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "answers": {
+                  "1": "C",
+                  "2": "B",
+                  "3": "A"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/results/upload": {
+      "post": {
+        "tags": [
+          "06. Results, NUC 5.0 CGPA & Transcripts"
+        ],
+        "summary": "1. Upload Student Score",
+        "description": "1. Upload Student Score under 06. Results, NUC 5.0 CGPA & Transcripts.",
+        "operationId": "post__api_v1_results_upload_1__Upload_Student_Score",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "student_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "academic_session": {
+                    "type": "string",
+                    "example": "2025/2026"
+                  },
+                  "semester": {
+                    "type": "string",
+                    "example": "first"
+                  },
+                  "ca_score": {
+                    "type": "number",
+                    "example": 28.5
+                  },
+                  "exam_score": {
+                    "type": "integer",
+                    "example": 58
+                  }
+                }
+              },
+              "example": {
+                "student_id": 1,
+                "course_id": 1,
+                "academic_session": "2025/2026",
+                "semester": "first",
+                "ca_score": 28.5,
+                "exam_score": 58
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/results/semester": {
+      "get": {
+        "tags": [
+          "06. Results, NUC 5.0 CGPA & Transcripts"
+        ],
+        "summary": "2. Get Semester Result Slip",
+        "description": "2. Get Semester Result Slip under 06. Results, NUC 5.0 CGPA & Transcripts.",
+        "operationId": "get__api_v1_results_semester_2__Get_Semester_Result_Slip",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2025/2026"
+            },
+            "description": "Filter parameter session"
+          },
+          {
+            "name": "semester",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "first"
+            },
+            "description": "Filter parameter semester"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/results/transcript": {
+      "get": {
+        "tags": [
+          "06. Results, NUC 5.0 CGPA & Transcripts"
+        ],
+        "summary": "3. Download Official Transcript PDF",
+        "description": "3. Download Official Transcript PDF under 06. Results, NUC 5.0 CGPA & Transcripts.",
+        "operationId": "get__api_v1_results_transcript_3__Download_Official_Transcript_PDF",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/finance/invoices": {
+      "get": {
+        "tags": [
+          "07. Finance, Invoicing & Gateway Split Payments"
+        ],
+        "summary": "1. List My Invoices",
+        "description": "1. List My Invoices under 07. Finance, Invoicing & Gateway Split Payments.",
+        "operationId": "get__api_v1_finance_invoices_1__List_My_Invoices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/finance/invoices/generate": {
+      "post": {
+        "tags": [
+          "07. Finance, Invoicing & Gateway Split Payments"
+        ],
+        "summary": "2. Generate Tuition Fee Invoice",
+        "description": "2. Generate Tuition Fee Invoice under 07. Finance, Invoicing & Gateway Split Payments.",
+        "operationId": "post__api_v1_finance_invoices_generate_2__Generate_Tuition_Fee_Invoice",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "session": {
+                    "type": "string",
+                    "example": "2025/2026"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "tuition"
+                  }
+                }
+              },
+              "example": {
+                "session": "2025/2026",
+                "type": "tuition"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/finance/invoices/1": {
+      "get": {
+        "tags": [
+          "07. Finance, Invoicing & Gateway Split Payments"
+        ],
+        "summary": "3. Get Invoice Details",
+        "description": "3. Get Invoice Details under 07. Finance, Invoicing & Gateway Split Payments.",
+        "operationId": "get__api_v1_finance_invoices_1_3__Get_Invoice_Details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/finance/pay": {
+      "post": {
+        "tags": [
+          "07. Finance, Invoicing & Gateway Split Payments"
+        ],
+        "summary": "4. Initiate Split Gateway Payment",
+        "description": "4. Initiate Split Gateway Payment under 07. Finance, Invoicing & Gateway Split Payments.",
+        "operationId": "post__api_v1_finance_pay_4__Initiate_Split_Gateway_Payment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "invoice_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "gateway": {
+                    "type": "string",
+                    "example": "paystack"
+                  }
+                }
+              },
+              "example": {
+                "invoice_id": 1,
+                "gateway": "paystack"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/finance/verify/PAY-TEST-REF-001": {
+      "post": {
+        "tags": [
+          "07. Finance, Invoicing & Gateway Split Payments"
+        ],
+        "summary": "5. Verify Gateway Payment Reference",
+        "description": "5. Verify Gateway Payment Reference under 07. Finance, Invoicing & Gateway Split Payments.",
+        "operationId": "post__api_v1_finance_verify_PAY_TEST_REF_001_5__Verify_Gateway_Payment_Reference",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "example": []
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/finance/receipts/RCT-NVU-2026-0001/pdf": {
+      "get": {
+        "tags": [
+          "07. Finance, Invoicing & Gateway Split Payments"
+        ],
+        "summary": "6. Download Payment Receipt PDF",
+        "description": "6. Download Payment Receipt PDF under 07. Finance, Invoicing & Gateway Split Payments.",
+        "operationId": "get__api_v1_finance_receipts_RCT_NVU_2026_0001_pdf_6__Download_Payment_Receipt_P",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/hostels": {
+      "get": {
+        "tags": [
+          "08. Facilities & Hostel Bed Allocations"
+        ],
+        "summary": "1. List Available Hostels",
+        "description": "1. List Available Hostels under 08. Facilities & Hostel Bed Allocations.",
+        "operationId": "get__api_v1_facilities_hostels_1__List_Available_Hostels",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/hostels/1/rooms": {
+      "get": {
+        "tags": [
+          "08. Facilities & Hostel Bed Allocations"
+        ],
+        "summary": "2. View Hostel Rooms & Bed Spaces",
+        "description": "2. View Hostel Rooms & Bed Spaces under 08. Facilities & Hostel Bed Allocations.",
+        "operationId": "get__api_v1_facilities_hostels_1_rooms_2__View_Hostel_Rooms___Bed_Spaces",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/hostels/reserve-bed": {
+      "post": {
+        "tags": [
+          "08. Facilities & Hostel Bed Allocations"
+        ],
+        "summary": "3. Reserve Bed Space (Atomic Mutex)",
+        "description": "3. Reserve Bed Space (Atomic Mutex) under 08. Facilities & Hostel Bed Allocations.",
+        "operationId": "post__api_v1_facilities_hostels_reserve_bed_3__Reserve_Bed_Space__Atomic_Mutex_",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bed_space_id": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              },
+              "example": {
+                "bed_space_id": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/facilities/hostels/my-allocation": {
+      "get": {
+        "tags": [
+          "08. Facilities & Hostel Bed Allocations"
+        ],
+        "summary": "4. View My Hostel Allocation",
+        "description": "4. View My Hostel Allocation under 08. Facilities & Hostel Bed Allocations.",
+        "operationId": "get__api_v1_facilities_hostels_my_allocation_4__View_My_Hostel_Allocation",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/hostels/agreement": {
+      "post": {
+        "tags": [
+          "08. Facilities & Hostel Bed Allocations"
+        ],
+        "summary": "5. Sign Tenancy Agreement",
+        "description": "5. Sign Tenancy Agreement under 08. Facilities & Hostel Bed Allocations.",
+        "operationId": "post__api_v1_facilities_hostels_agreement_5__Sign_Tenancy_Agreement",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "allocation_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "agreed": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              },
+              "example": {
+                "allocation_id": 1,
+                "agreed": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/facilities/hostels/maintenance": {
+      "post": {
+        "tags": [
+          "08. Facilities & Hostel Bed Allocations"
+        ],
+        "summary": "6. Submit Maintenance Ticket",
+        "description": "6. Submit Maintenance Ticket under 08. Facilities & Hostel Bed Allocations.",
+        "operationId": "post__api_v1_facilities_hostels_maintenance_6__Submit_Maintenance_Ticket",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "hostel_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "plumbing"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Low water pressure in room shower."
+                  }
+                }
+              },
+              "example": {
+                "hostel_id": 1,
+                "category": "plumbing",
+                "description": "Low water pressure in room shower."
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "08. Facilities & Hostel Bed Allocations"
+        ],
+        "summary": "7. View Maintenance Tickets",
+        "description": "7. View Maintenance Tickets under 08. Facilities & Hostel Bed Allocations.",
+        "operationId": "get__api_v1_facilities_hostels_maintenance_7__View_Maintenance_Tickets",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/clinic/register": {
+      "post": {
+        "tags": [
+          "09. Campus Health Clinic"
+        ],
+        "summary": "1. Register Electronic Health Card",
+        "description": "1. Register Electronic Health Card under 09. Campus Health Clinic.",
+        "operationId": "post__api_v1_facilities_clinic_register_1__Register_Electronic_Health_Card",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "blood_group": {
+                    "type": "string",
+                    "example": "O+"
+                  },
+                  "genotype": {
+                    "type": "string",
+                    "example": "AA"
+                  },
+                  "allergies": {
+                    "type": "string",
+                    "example": "Penicillin"
+                  },
+                  "emergency_contact_name": {
+                    "type": "string",
+                    "example": "Dr. Paul Okonkwo"
+                  },
+                  "emergency_contact_phone": {
+                    "type": "string",
+                    "example": "08011223344"
+                  }
+                }
+              },
+              "example": {
+                "blood_group": "O+",
+                "genotype": "AA",
+                "allergies": "Penicillin",
+                "emergency_contact_name": "Dr. Paul Okonkwo",
+                "emergency_contact_phone": "08011223344"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/facilities/clinic/card": {
+      "get": {
+        "tags": [
+          "09. Campus Health Clinic"
+        ],
+        "summary": "2. View Health Card Telemetry",
+        "description": "2. View Health Card Telemetry under 09. Campus Health Clinic.",
+        "operationId": "get__api_v1_facilities_clinic_card_2__View_Health_Card_Telemetry",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/clinic/appointments": {
+      "post": {
+        "tags": [
+          "09. Campus Health Clinic"
+        ],
+        "summary": "3. Book Doctor Consultation",
+        "description": "3. Book Doctor Consultation under 09. Campus Health Clinic.",
+        "operationId": "post__api_v1_facilities_clinic_appointments_3__Book_Doctor_Consultation",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "example": "Routine medical examination and prescription refill."
+                  },
+                  "appointment_date": {
+                    "type": "string",
+                    "example": "2026-09-10"
+                  }
+                }
+              },
+              "example": {
+                "reason": "Routine medical examination and prescription refill.",
+                "appointment_date": "2026-09-10"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "09. Campus Health Clinic"
+        ],
+        "summary": "4. View Clinic Appointments",
+        "description": "4. View Clinic Appointments under 09. Campus Health Clinic.",
+        "operationId": "get__api_v1_facilities_clinic_appointments_4__View_Clinic_Appointments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/library/catalog": {
+      "get": {
+        "tags": [
+          "10. Central Library & Digital Repositories"
+        ],
+        "summary": "1. Search Library Catalog & Repositories",
+        "description": "1. Search Library Catalog & Repositories under 10. Central Library & Digital Repositories.",
+        "operationId": "get__api_v1_facilities_library_catalog_1__Search_Library_Catalog___Repositories",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Algorithms"
+            },
+            "description": "Filter parameter query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/library/reserve": {
+      "post": {
+        "tags": [
+          "10. Central Library & Digital Repositories"
+        ],
+        "summary": "2. Reserve Physical Book",
+        "description": "2. Reserve Physical Book under 10. Central Library & Digital Repositories.",
+        "operationId": "post__api_v1_facilities_library_reserve_2__Reserve_Physical_Book",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "library_item_id": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              },
+              "example": {
+                "library_item_id": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/facilities/library/my-borrowed": {
+      "get": {
+        "tags": [
+          "10. Central Library & Digital Repositories"
+        ],
+        "summary": "3. View My Borrowed Books",
+        "description": "3. View My Borrowed Books under 10. Central Library & Digital Repositories.",
+        "operationId": "get__api_v1_facilities_library_my_borrowed_3__View_My_Borrowed_Books",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/facilities/library/loans/1/return": {
+      "post": {
+        "tags": [
+          "10. Central Library & Digital Repositories"
+        ],
+        "summary": "4. Return Borrowed Book",
+        "description": "4. Return Borrowed Book under 10. Central Library & Digital Repositories.",
+        "operationId": "post__api_v1_facilities_library_loans_1_return_4__Return_Borrowed_Book",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "example": []
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/approvals/requests": {
+      "post": {
+        "tags": [
+          "11. Multi-Level Approvals Engine"
+        ],
+        "summary": "1. Submit Approval Request",
+        "description": "1. Submit Approval Request under 11. Multi-Level Approvals Engine.",
+        "operationId": "post__api_v1_approvals_requests_1__Submit_Approval_Request",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "course_form_signing"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Semester Course Form Signing (CSC 300L)"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "example": "Completed full credit registration."
+                  }
+                }
+              },
+              "example": {
+                "type": "course_form_signing",
+                "title": "Semester Course Form Signing (CSC 300L)",
+                "reason": "Completed full credit registration."
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "11. Multi-Level Approvals Engine"
+        ],
+        "summary": "2. View Requests Pending My Action",
+        "description": "2. View Requests Pending My Action under 11. Multi-Level Approvals Engine.",
+        "operationId": "get__api_v1_approvals_requests_2__View_Requests_Pending_My_Action",
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "pending_my_action"
+            },
+            "description": "Filter parameter filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/approvals/requests/1/action": {
+      "post": {
+        "tags": [
+          "11. Multi-Level Approvals Engine"
+        ],
+        "summary": "3. Act on Approval Step (Approve / Reject)",
+        "description": "3. Act on Approval Step (Approve / Reject) under 11. Multi-Level Approvals Engine.",
+        "operationId": "post__api_v1_approvals_requests_1_action_3__Act_on_Approval_Step__Approve___Reje",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "example": "approved"
+                  },
+                  "comments": {
+                    "type": "string",
+                    "example": "Prerequisites confirmed. Approved."
+                  }
+                }
+              },
+              "example": {
+                "action": "approved",
+                "comments": "Prerequisites confirmed. Approved."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/card": {
+      "get": {
+        "tags": [
+          "12. Tamper-Proof Digital ID Cards"
+        ],
+        "summary": "1. View Digital ID Card & Security Hash",
+        "description": "1. View Digital ID Card & Security Hash under 12. Tamper-Proof Digital ID Cards.",
+        "operationId": "get__api_v1_identity_card_1__View_Digital_ID_Card___Security_Hash",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/identity/card/pdf": {
+      "get": {
+        "tags": [
+          "12. Tamper-Proof Digital ID Cards"
+        ],
+        "summary": "2. Download Digital ID Card PDF",
+        "description": "2. Download Digital ID Card PDF under 12. Tamper-Proof Digital ID Cards.",
+        "operationId": "get__api_v1_identity_card_pdf_2__Download_Digital_ID_Card_PDF",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/postgraduate/dashboard": {
+      "get": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "1. Candidate SPS Research Dashboard & Early Warning Radar",
+        "description": "1. Candidate SPS Research Dashboard & Early Warning Radar under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "get__api_v1_postgraduate_dashboard_1__Candidate_SPS_Research_Dashboard___Early_W",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/postgraduate/proposals": {
+      "post": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "2. Submit Research Proposal",
+        "description": "2. Submit Research Proposal under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "post__api_v1_postgraduate_proposals_2__Submit_Research_Proposal",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Decentralized Federated Learning Architectures for Latency Optimization"
+                  },
+                  "abstract": {
+                    "type": "string",
+                    "example": "Doctoral research focusing on zero-knowledge gradient aggregation for distributed edge clusters."
+                  },
+                  "document_url": {
+                    "type": "string",
+                    "example": "https://novica.edu.ng/pg/proposals/chidi_doctoral.pdf"
+                  }
+                }
+              },
+              "example": {
+                "title": "Decentralized Federated Learning Architectures for Latency Optimization",
+                "abstract": "Doctoral research focusing on zero-knowledge gradient aggregation for distributed edge clusters.",
+                "document_url": "https://novica.edu.ng/pg/proposals/chidi_doctoral.pdf"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "3. List Research Proposals",
+        "description": "3. List Research Proposals under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "get__api_v1_postgraduate_proposals_3__List_Research_Proposals",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/postgraduate/proposals/1/review": {
+      "post": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "4. Supervisor / Board Review Proposal",
+        "description": "4. Supervisor / Board Review Proposal under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "post__api_v1_postgraduate_proposals_1_review_4__Supervisor___Board_Review_Propos",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "approved"
+                  },
+                  "reviewer_feedback": {
+                    "type": "string",
+                    "example": "Commendable theoretical formulation. Proceed to testbed."
+                  },
+                  "defense_score": {
+                    "type": "number",
+                    "example": 88.5
+                  },
+                  "defense_date": {
+                    "type": "string",
+                    "example": "2026-09-08"
+                  }
+                }
+              },
+              "example": {
+                "status": "approved",
+                "reviewer_feedback": "Commendable theoretical formulation. Proceed to testbed.",
+                "defense_score": 88.5,
+                "defense_date": "2026-09-08"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/postgraduate/milestones": {
+      "get": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "5. View Thesis Chapter Milestones",
+        "description": "5. View Thesis Chapter Milestones under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "get__api_v1_postgraduate_milestones_5__View_Thesis_Chapter_Milestones",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/postgraduate/milestones/4/submit": {
+      "post": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "6. Submit Thesis Chapter Draft",
+        "description": "6. Submit Thesis Chapter Draft under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "post__api_v1_postgraduate_milestones_4_submit_6__Submit_Thesis_Chapter_Draft",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "submission_url": {
+                    "type": "string",
+                    "example": "https://novica.edu.ng/pg/thesis/ch4_draft.pdf"
+                  }
+                }
+              },
+              "example": {
+                "submission_url": "https://novica.edu.ng/pg/thesis/ch4_draft.pdf"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/postgraduate/milestones/4/review": {
+      "post": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "7. Supervisor Review Thesis Chapter",
+        "description": "7. Supervisor Review Thesis Chapter under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "post__api_v1_postgraduate_milestones_4_review_7__Supervisor_Review_Thesis_Chapte",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "approved"
+                  },
+                  "supervisor_comments": {
+                    "type": "string",
+                    "example": "Empirical testbed benchmarks verified. Approved."
+                  }
+                }
+              },
+              "example": {
+                "status": "approved",
+                "supervisor_comments": "Empirical testbed benchmarks verified. Approved."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/postgraduate/supervision-logs": {
+      "post": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "8. Log Supervision Meeting",
+        "description": "8. Log Supervision Meeting under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "post__api_v1_postgraduate_supervision_logs_8__Log_Supervision_Meeting",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "staff_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "meeting_date": {
+                    "type": "string",
+                    "example": "2026-09-08"
+                  },
+                  "summary_notes": {
+                    "type": "string",
+                    "example": "Reviewed Chapter 4 experimental latency reduction."
+                  },
+                  "next_deliverables": {
+                    "type": "string",
+                    "example": "Prepare Chapter 5 comparative charts."
+                  }
+                }
+              },
+              "example": {
+                "staff_id": 1,
+                "meeting_date": "2026-09-08",
+                "summary_notes": "Reviewed Chapter 4 experimental latency reduction.",
+                "next_deliverables": "Prepare Chapter 5 comparative charts."
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "9. View Supervision Logs",
+        "description": "9. View Supervision Logs under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "get__api_v1_postgraduate_supervision_logs_9__View_Supervision_Logs",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/postgraduate/supervision-logs/1/confirm": {
+      "post": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "10. Supervisor Confirm Meeting Log",
+        "description": "10. Supervisor Confirm Meeting Log under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "post__api_v1_postgraduate_supervision_logs_1_confirm_10__Supervisor_Confirm_Meet",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "example": []
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/postgraduate/early-warning": {
+      "get": {
+        "tags": [
+          "13. Postgraduate School (SPS) Engine"
+        ],
+        "summary": "11. Dean SPS Early Warning Radar Analytics",
+        "description": "11. Dean SPS Early Warning Radar Analytics under 13. Postgraduate School (SPS) Engine.",
+        "operationId": "get__api_v1_postgraduate_early_warning_11__Dean_SPS_Early_Warning_Radar_Analytic",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ai/advisor/chat": {
+      "post": {
+        "tags": [
+          "14. Context-Aware AI Academic Advisor"
+        ],
+        "summary": "1. Interactive Chat (Live SIS Telemetry Injected)",
+        "description": "1. Interactive Chat (Live SIS Telemetry Injected) under 14. Context-Aware AI Academic Advisor.",
+        "operationId": "post__api_v1_ai_advisor_chat_1__Interactive_Chat__Live_SIS_Telemetry_Injected_",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "example": "What is my current CGPA, academic standing, and what courses should I prioritize for graduation with honors?"
+                  }
+                }
+              },
+              "example": {
+                "prompt": "What is my current CGPA, academic standing, and what courses should I prioritize for graduation with honors?"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/advisor/history": {
+      "get": {
+        "tags": [
+          "14. Context-Aware AI Academic Advisor"
+        ],
+        "summary": "2. View Conversation History",
+        "description": "2. View Conversation History under 14. Context-Aware AI Academic Advisor.",
+        "operationId": "get__api_v1_ai_advisor_history_2__View_Conversation_History",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ai/advisor/clear": {
+      "post": {
+        "tags": [
+          "14. Context-Aware AI Academic Advisor"
+        ],
+        "summary": "3. Clear Conversation Session",
+        "description": "3. Clear Conversation Session under 14. Context-Aware AI Academic Advisor.",
+        "operationId": "post__api_v1_ai_advisor_clear_3__Clear_Conversation_Session",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "example": []
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/career/profile": {
+      "get": {
+        "tags": [
+          "15. Career Success Portal & CV Generator"
+        ],
+        "summary": "1. View Student Career Profile",
+        "description": "1. View Student Career Profile under 15. Career Success Portal & CV Generator.",
+        "operationId": "get__api_v1_career_profile_1__View_Student_Career_Profile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/career/skills": {
+      "post": {
+        "tags": [
+          "15. Career Success Portal & CV Generator"
+        ],
+        "summary": "2. Add Skill to Profile",
+        "description": "2. Add Skill to Profile under 15. Career Success Portal & CV Generator.",
+        "operationId": "post__api_v1_career_skills_2__Add_Skill_to_Profile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Docker & Kubernetes"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "technical"
+                  },
+                  "proficiency_level": {
+                    "type": "string",
+                    "example": "advanced"
+                  }
+                }
+              },
+              "example": {
+                "name": "Docker & Kubernetes",
+                "category": "technical",
+                "proficiency_level": "advanced"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/career/projects": {
+      "post": {
+        "tags": [
+          "15. Career Success Portal & CV Generator"
+        ],
+        "summary": "3. Add Portfolio Project",
+        "description": "3. Add Portfolio Project under 15. Career Success Portal & CV Generator.",
+        "operationId": "post__api_v1_career_projects_3__Add_Portfolio_Project",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Campus Distributed Microservices Gateway"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "High-throughput institutional microservices proxy handling 10k req/s."
+                  },
+                  "technologies": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "PHP 8.3"
+                    }
+                  },
+                  "github_url": {
+                    "type": "string",
+                    "example": "https://github.com/chidi/campus-gateway"
+                  }
+                }
+              },
+              "example": {
+                "title": "Campus Distributed Microservices Gateway",
+                "description": "High-throughput institutional microservices proxy handling 10k req/s.",
+                "technologies": [
+                  "PHP 8.3",
+                  "Laravel 11",
+                  "Redis",
+                  "PostgreSQL"
+                ],
+                "github_url": "https://github.com/chidi/campus-gateway"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/career/certifications": {
+      "post": {
+        "tags": [
+          "15. Career Success Portal & CV Generator"
+        ],
+        "summary": "4. Add Professional Certification",
+        "description": "4. Add Professional Certification under 15. Career Success Portal & CV Generator.",
+        "operationId": "post__api_v1_career_certifications_4__Add_Professional_Certification",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "AWS Certified Solutions Architect"
+                  },
+                  "issuer": {
+                    "type": "string",
+                    "example": "Amazon Web Services"
+                  },
+                  "issue_date": {
+                    "type": "string",
+                    "example": "2025-11-15"
+                  },
+                  "credential_url": {
+                    "type": "string",
+                    "example": "https://aws.amazon.com/verification/AWS-SAA-88231"
+                  }
+                }
+              },
+              "example": {
+                "title": "AWS Certified Solutions Architect",
+                "issuer": "Amazon Web Services",
+                "issue_date": "2025-11-15",
+                "credential_url": "https://aws.amazon.com/verification/AWS-SAA-88231"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/career/jobs": {
+      "get": {
+        "tags": [
+          "15. Career Success Portal & CV Generator"
+        ],
+        "summary": "5. Browse Campus Jobs & Internships",
+        "description": "5. Browse Campus Jobs & Internships under 15. Career Success Portal & CV Generator.",
+        "operationId": "get__api_v1_career_jobs_5__Browse_Campus_Jobs___Internships",
+        "parameters": [
+          {
+            "name": "job_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "internship"
+            },
+            "description": "Filter parameter job_type"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/career/cv/pdf": {
+      "get": {
+        "tags": [
+          "15. Career Success Portal & CV Generator"
+        ],
+        "summary": "6. Download ATS-Friendly CV PDF",
+        "description": "6. Download ATS-Friendly CV PDF under 15. Career Success Portal & CV Generator.",
+        "operationId": "get__api_v1_career_cv_pdf_6__Download_ATS_Friendly_CV_PDF",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/collaboration/study-groups": {
+      "get": {
+        "tags": [
+          "16. Peer Collaboration & Study Groups"
+        ],
+        "summary": "1. List Active Study Groups",
+        "description": "1. List Active Study Groups under 16. Peer Collaboration & Study Groups.",
+        "operationId": "get__api_v1_collaboration_study_groups_1__List_Active_Study_Groups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "16. Peer Collaboration & Study Groups"
+        ],
+        "summary": "2. Create Study Group",
+        "description": "2. Create Study Group under 16. Peer Collaboration & Study Groups.",
+        "operationId": "post__api_v1_collaboration_study_groups_2__Create_Study_Group",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Distributed Systems & Concurrency Cell"
+                  },
+                  "course_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Deep dive into Raft consensus, Paxos and distributed transactions."
+                  },
+                  "max_members": {
+                    "type": "integer",
+                    "example": 8
+                  },
+                  "meeting_schedule": {
+                    "type": "string",
+                    "example": "Saturdays 10:00 AM"
+                  }
+                }
+              },
+              "example": {
+                "name": "Distributed Systems & Concurrency Cell",
+                "course_id": 1,
+                "description": "Deep dive into Raft consensus, Paxos and distributed transactions.",
+                "max_members": 8,
+                "meeting_schedule": "Saturdays 10:00 AM"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collaboration/study-groups/1/join": {
+      "post": {
+        "tags": [
+          "16. Peer Collaboration & Study Groups"
+        ],
+        "summary": "3. Join Study Group",
+        "description": "3. Join Study Group under 16. Peer Collaboration & Study Groups.",
+        "operationId": "post__api_v1_collaboration_study_groups_1_join_3__Join_Study_Group",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "example": []
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collaboration/study-groups/1/messages": {
+      "get": {
+        "tags": [
+          "16. Peer Collaboration & Study Groups"
+        ],
+        "summary": "4. View Study Group Messages",
+        "description": "4. View Study Group Messages under 16. Peer Collaboration & Study Groups.",
+        "operationId": "get__api_v1_collaboration_study_groups_1_messages_4__View_Study_Group_Messages",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "16. Peer Collaboration & Study Groups"
+        ],
+        "summary": "5. Post Message to Study Group",
+        "description": "5. Post Message to Study Group under 16. Peer Collaboration & Study Groups.",
+        "operationId": "post__api_v1_collaboration_study_groups_1_messages_5__Post_Message_to_Study_Grou",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated - Invalid or missing Bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Uploaded the consensus algorithm slide deck for discussion this weekend."
+                  }
+                }
+              },
+              "example": {
+                "message": "Uploaded the consensus algorithm slide deck for discussion this weekend."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT / Sanctum Token",
+        "description": "Enter your Sanctum token obtained from the `/api/v1/auth/login` endpoint."
+      },
+      "UniversityTenantHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-University-Code",
+        "description": "Multi-tenant university identifier code (e.g. `NVU` or `APEX`)"
+      }
+    },
+    "schemas": {
+      "StandardSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Operation completed successfully."
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ValidationErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The given data was invalid."
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "UnauthenticatedResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Unauthenticated."
+          }
+        }
+      }
+    }
+  }
+}
